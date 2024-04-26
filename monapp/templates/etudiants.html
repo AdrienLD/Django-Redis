@@ -5,7 +5,8 @@
     <title>Sélectionner un étudiant</title>
 </head>
 <body>
-    <h1>Sélectionner un étudiant</h1>
+    <h1>Sélectionner votre compte</h1>
+    <h2>Étudiants</h2>
     <ul>
         {% for student in students %}
             <li>
@@ -13,5 +14,14 @@
             </li>
         {% endfor %}
     </ul>
+    <h2>Enseignants</h2>
+    <ul>
+        {% for prof in profs %}
+            <li>
+                <a>{{ prof.prenom }}{{ prof.nom }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'update' %}">Ajouter un étudiant</a>
 </body>
 </html>

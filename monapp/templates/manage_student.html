@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>Modifier les cours de {{ student.nom }} {{ student.prenom }}</h1>
-    <h2>Supprimer un cours</h2>
+    <h2>Vos cours</h2>
     <ul>
         {% for course_id in cours_details %}
             {% if course_id.id in student.cours %}
-                <li>{{ course_id.titre }} <a href="{% url 'delete_cours' student.id course_id.id %}">Supprimer</a></li>
+                <li>{{ course_id.titre }} --- <a href="{% url 'subscribe_cours' student.id course_id.id %}">S'abboner</a> - <a href="{% url 'delete_cours' student.id course_id.id %}">Supprimer</a></li>
             {% endif %}
         {% endfor %}
     </ul>
@@ -23,5 +23,7 @@
             {% endif %}
         {% endfor %}
     </ul>
+
+    <a href="{% url 'update' %}">Ajouter un étudiant</a>
 </body>
 </html>
