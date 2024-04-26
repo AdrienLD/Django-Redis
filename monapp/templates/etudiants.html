@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sélectionner un étudiant</title>
+</head>
+<body>
+    <h1>Sélectionner un étudiant</h1>
+    <ul>
+        {% for student in students %}
+            <li>
+                <a href="{% url 'manage_student' student.id %}">{{ student.nom }} {{ student.prenom }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

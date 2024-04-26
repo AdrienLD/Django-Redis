@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier les cours de l'étudiant</title>
+</head>
+<body>
+    <h1>Modifier les cours de {{ student.nom }} {{ student.prenom }}</h1>
+    <h2>Supprimer un cours</h2>
+    <ul>
+        {% for course_id in cours_details %}
+            {% if course_id.id in student.cours %}
+                <li>{{ course_id.titre }} <a href="{% url 'delete_cours' student.id course_id.id %}">Supprimer</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <h2>Ajouter un cours</h2>
+    <ul>
+        {% for course_id in cours_details %}
+            {% if course_id.id not in student.cours %}
+                <li>{{ course_id.titre }} <a href="{% url 'add_cours' student.id course_id.id %}">Ajouter</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
