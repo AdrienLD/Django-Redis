@@ -1,5 +1,6 @@
 import json
 import redis
+from django.shortcuts import render, redirect
 
 def get_redis_client():
     r = redis.Redis
@@ -54,14 +55,14 @@ def initialize(request):
     create_course('107', 'Sécurité informatique', 'M. Lefebvre')
     create_course('108', 'Analyse de données', 'Mme. Lemoine')
 
-    create_student('201', 'Dupont', 'Jean', ['101', '102', '103'])
-    create_student('202', 'Durand', 'Paul', ['101', '104', '105'])
-    create_student('203', 'Martin', 'Jacques', ['101', '102', '106'])
-    create_student('204', 'Leblanc', 'Marie', ['101', '102', '107'])
-    create_student('205', 'Lambert', 'Sophie', ['101', '102', '108'])
-    create_student('206', 'Dupuis', 'Alice', ['101', '103', '104'])
-    create_student('207', 'Lefebvre', 'Julie', ['101', '105', '106'])
-    create_student('208', 'Lemoine', 'Marine', ['101', '107', '108'])
+    create_student('201', 'Pierre', 'Jean', ['101', '102', '103'])
+    create_student('202', 'Feur', 'Paul', ['101', '104', '105'])
+    create_student('203', 'Chirac', 'Jacques', ['101', '102', '106'])
+    create_student('204', 'Claire', 'Marie', ['101', '102', '107'])
+    create_student('205', 'Castello', 'Sophie', ['101', '102', '108'])
+    create_student('206', 'Merveille', 'Alice', ['101', '103', '104'])
+    create_student('207', 'Armani', 'Julie', ['101', '105', '106'])
+    create_student('208', 'Stylop', 'Marine', ['101', '107', '108'])
 
 
     create_teacher('301', 'Dupont', 'M.', ['101'])
@@ -73,4 +74,4 @@ def initialize(request):
     create_teacher('307', 'Lefebvre', 'M.', ['107'])
     create_teacher('308', 'Lemoine', 'Mme.', ['108'])
 
-    return redirect('manage_courses')
+    return redirect('select_student')

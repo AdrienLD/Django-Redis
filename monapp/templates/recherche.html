@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sélectionner un étudiant</title>
+</head>
+<body>
+
+    <h1>Recherche</h1>
+    <form action="{% url 'rechercher' %}" method="GET">
+        <input type="text" name="query" value="{{ query }}">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% if resultat_eleves %}
+        <h2>Élèves :</h2>
+        <ul>
+            {% for eleve_id in resultat_eleves %}
+                <li>Élève ID: {{ eleve_id }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if resultat_cours %}
+        <h2>Cours :</h2>
+        <ul>
+            {% for cours_id in resultat_cours %}
+                <li>Cours ID: {{ cours_id }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if resultat_professeurs %}
+        <h2>Professeurs :</h2>
+        <ul>
+            {% for prof_id in resultat_professeurs %}
+                <li>Professeur ID: {{ prof_id }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if not resultat_eleves and not resultat_cours and not resultat_professeurs %}
+        <p>Aucun résultat trouvé pour "{{ query }}".</p>
+    {% endif %}
+
+    <a href="{% url 'select_student' %}">Retour à la page d'accueil</a>
+</body>
+</html>

@@ -11,7 +11,7 @@
     <ul>
         {% for course_id in cours_details %}
             {% if course_id.id in student.cours %}
-                <li>{{ course_id.titre }} --- <a href="{% url 'subscribe_cours' student.id course_id.id %}">S'abboner</a> - <a href="{% url 'delete_cours' student.id course_id.id %}">Supprimer</a></li>
+                <li>{{ course_id.titre }} --- <a href="{% url 'messages' student.id course_id.id %}">S'abboner</a> - <a href="{% url 'delete_cours' student.id course_id.id %}">Supprimer</a></li>
             {% endif %}
         {% endfor %}
     </ul>
@@ -24,6 +24,6 @@
         {% endfor %}
     </ul>
 
-    <a href="{% url 'update' %}">Ajouter un étudiant</a>
+    <a href="{% url 'messages' student.id 0 %}">Actualiser les messages</a>
 </body>
 </html>

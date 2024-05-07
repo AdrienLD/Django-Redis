@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 import redis
 import json
 from monapp.initial_config import get_redis_client
+import re
+from django.http import JsonResponse
 
 def select_student(request):
     r = get_redis_client()
@@ -66,16 +68,75 @@ def subscribe_cours(request, id_etudiant, id_cours):
     pubsub = r.pubsub()
     pubsub.subscribe(canal_nouvelles)
 
+    nouveaux_messages = []
+    for message in pubsub.listen():
+        print('message', message, type(message), type(id_cours))
+        if message['type'] == 'message':
+            nouveaux_messages.append(message['data'].decode())
+
+    print('nouveaux_messages', nouveaux_messages)
+
     return redirect('manage_student', id_etudiant=id_etudiant)
 
-def update(request):
+def messages(request, id_etudiant, id_cours):
     r = get_redis_client()
-    canal_nouvelles = id_cours
-    nouvelles_messages = []
+    nouveaux_messages = []
 
-    messages = r.pubsub(num=1).parse_response()
-    for message in messages:
-        if isinstance(message, dict) and 'data' in message:
-            nouvelles_messages.append(message['data'].decode())
+    pubsub = r.pubsub()
+    if id_cours != '':
+        pubsub.subscribe(id_cours)
 
-    return JsonResponse({'nouvelles_messages': nouvelles_messages})
+        for message in pubsub.listen():
+            if message['type'] == 'message':
+                nouveaux_messages.append(message['data'].decode())
+    else:
+        # Si id_cours est une chaîne vide, nous ne nous abonnons à aucun canal
+        nouveaux_messages.append("Aucun canal spécifié")
+
+    return render(request, 'messages.html', {'nouveaux_messages': nouveaux_messages})
+
+
+def rechercher(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', '')
+
+        r = get_redis_client()
+
+        resultat_eleves = []
+        eleve_keys = r.keys('etudiant:*')
+        for key in eleve_keys:
+            eleve = r.hgetall(key)
+            for value in eleve.values():
+                if re.search(query, value.decode(), flags=re.IGNORECASE):
+                    eleve_info = {k.decode(): v.decode() for k, v in eleve.items()}
+                    resultat_eleves.append(eleve_info)
+                    break
+
+        resultat_cours = []
+        eleve_keys = r.keys('cours:*')
+        for key in eleve_keys:
+            eleve = r.hgetall(key)
+            for value in eleve.values():
+                if re.search(query, value.decode(), flags=re.IGNORECASE):
+                    eleve_info = {k.decode(): v.decode() for k, v in eleve.items()}
+                    resultat_cours.append(eleve_info)
+                    break
+
+        resultat_professeurs = []
+        eleve_keys = r.keys('prof:*')
+        for key in eleve_keys:
+            eleve = r.hgetall(key)
+            for value in eleve.values():
+                if re.search(query, value.decode(), flags=re.IGNORECASE):
+                    eleve_info = {k.decode(): v.decode() for k, v in eleve.items()}
+                    resultat_professeurs.append(eleve_info)
+                    break
+
+        return render(request, 'recherche.html', {
+            'query': query,
+            'resultat_eleves': resultat_eleves,
+            'resultat_cours': resultat_cours,
+            'resultat_professeurs': resultat_professeurs
+        })
+    else:
+        return render(request, 'recherche.html')
